@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - ResiGudang</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { primary: '#13ec37', dark: '#0b1210' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    animation: { 'float': 'float 6s ease-in-out infinite' },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0b1210; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            border-color: #13ec37;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 2px rgba(19, 236, 55, 0.2);
+        }
+        /* Autofill Fix */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #0b1210 inset !important;
+            -webkit-text-fill-color: white !important;
+            caret-color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center relative overflow-hidden selection:bg-primary selection:text-black">
+
+    <div class="fixed top-[-10%] left-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] animate-float opacity-60 pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] animate-float opacity-40 pointer-events-none" style="animation-delay: 2s;"></div>
+
+    <div class="w-full max-w-md p-6 relative z-10">
+        
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-green-600 shadow-[0_0_30px_rgba(19,236,55,0.4)] mb-4">
+                <span class="material-symbols-rounded text-3xl text-black font-bold">warehouse</span>
+            </div>
+            <h1 class="text-3xl font-black text-white tracking-tight mb-1">ResiGudang</h1>
+            <p class="text-white/40 text-sm">Masuk untuk mengelola hasil panen.</p>
+        </div>
+
+    <div class="glass-card rounded-3xl p-8">
+        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                @csrf
+
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase mb-2 ml-1">Email Address</label>
+                    <div class="relative">
+                        <input type="email" name="email" required autofocus placeholder="nama@email.com" 
+                            class="glass-input w-full px-5 py-3.5 rounded-xl outline-none placeholder:text-white/20">
+                        <span class="material-symbols-rounded absolute right-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">mail</span>
+                    </div>
+                    @error('email')
+                        <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase mb-2 ml-1">Password</label>
+                    <div class="relative">
+                        <input type="password" name="password" required placeholder="••••••••" 
+                            class="glass-input w-full px-5 py-3.5 rounded-xl outline-none placeholder:text-white/20">
+                        <span class="material-symbols-rounded absolute right-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">lock</span>
+                    </div>
+                    @error('password')
+                        <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" name="remember" class="w-4 h-4 rounded border-white/20 bg-white/5 text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer">
+                        <span class="text-white/60 group-hover:text-white transition-colors">Ingat Saya</span>
+                    </label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="text-primary hover:text-white transition-colors font-medium">Lupa Password?</a>
+                    @endif
+                </div>
+
+                <div class="mt-4 mb-4">
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                    @error('g-recaptcha-response')
+                        <span class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-green-600 text-black font-bold text-lg shadow-[0_0_20px_rgba(19,236,55,0.3)] hover:shadow-[0_0_30px_rgba(19,236,55,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
+                    Masuk Sekarang
+                </button>
+
+            </form> </div> 
+            {{--  <p class="text-center mt-8 text-white/40 text-sm">
+                Belum punya akun? 
+                <a href="{{ route('register') }}" class="text-primary hover:text-white font-bold transition-colors">Daftar jadi Petani</a>
+            </p> --}}
+    </div> </body>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</html>
