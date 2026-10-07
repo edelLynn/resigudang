@@ -20,7 +20,7 @@ Route::get('/aktivasi-akun/{id}', [App\Http\Controllers\SuperAdminController::cl
     ->middleware('signed');
 
 // ====================================================
-// MESIN PENGIRIM EMAIL (POP-UP HUBUNGI KAMI)
+// MESIN PENGIRIM EMAIL
 // ====================================================
 Route::post('/contact/send', function (Request $request) {
     // 1. Validasi inputan biar gak diisi sembarangan
@@ -30,7 +30,7 @@ Route::post('/contact/send', function (Request $request) {
         'message' => 'required|string',
     ]);
 
-    // 2. Desain isi suratnya (Bisa pake HTML biar cakep)
+    // 2. Desain isi suratnya
         $htmlContent = "
             <h2>Ada Pesan Baru dari Contact Form!</h2>
             <p><strong>Nama Lengkap:</strong> " . e($request->name) . "</p>
@@ -100,7 +100,6 @@ Route::middleware(['auth', 'verified', 'role:petani'])->group(function () {
     Route::get('/deposit/{id}/download', [DepositController::class, 'downloadResi'])->name('deposit.download');
     Route::post('/deposit/{id}/request-final', [DepositController::class, 'requestFinal'])->name('deposit.request_final');
     
-    // Nanti teks menunya kita ubah jadi "Transaksi" di bladenya
     Route::get('/stok-saya', [PetaniInventoryController::class, 'index'])->name('petani.inventory.index');
 });
 
